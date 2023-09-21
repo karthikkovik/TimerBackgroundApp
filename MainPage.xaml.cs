@@ -94,7 +94,7 @@ namespace TimerBackgroundApp
 
                 await Windows.Storage.FileIO.AppendTextAsync(logFile, $"File is located at {logFile.Path.ToString()}\n" + $" - {DateTime.Now:yyyy-MM-dd HH:mm:ss}: {message}" + Environment.NewLine);
 
-                //Trace.WriteLine(String.Format("File is located at {0}", logFile.Path.ToString()));
+                Trace.WriteLine(String.Format("File is located at {0}", logFile.Path.ToString()));
             }
             catch (TaskCanceledException tcex)
             {
