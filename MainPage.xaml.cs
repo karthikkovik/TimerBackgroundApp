@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.ExtendedExecution;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -19,12 +20,19 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
+//for background task management
+using Windows.ApplicationModel.Background;
+
+//extend execution
+using Windows.ApplicationModel.ExtendedExecution.Foreground;
+using Windows.ApplicationModel.ExtendedExecution;
+
 namespace TimerBackgroundApp
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, IBackgroundTask
     {
         public int timerCount = 0;
         public DispatcherTimer timer = null;
@@ -105,6 +113,12 @@ namespace TimerBackgroundApp
                 Trace.WriteLine("Error in log creation function : " + ex.Message);
                 // Handle any other exceptions that may occur while writing to the log file
             }
+        }
+
+        public void Run(IBackgroundTaskInstance taskInstance)
+        {
+            Trace.WriteLine("Background Run Execution");
+            LogTheMessage("Background Run Execution");
         }
     }
 }

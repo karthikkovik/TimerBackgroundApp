@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -26,10 +27,30 @@ namespace TimerBackgroundApp
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
+        
+        private MainPage mainPage;
+
         public App()
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            try
+            {
+                var builder = new BackgroundTaskBuilder();
+                builder.Name = "MyBackgroundTask";
+                builder.TaskEntryPoint = typeof(MainPage).FullName;
+                builder.SetTrigger(new TimeTrigger(1, false)); // Example trigger
+                // Request extended background task time
+                builder.AddCondition(new SystemCondition(SystemConditionType.InternetAvailable));
+                builder.AddCondition(new SystemCondition(SystemConditionType.UserPresent));
+
+                BackgroundTaskRegistration task = builder?.Register();
+            }
+            catch (Exception e)
+            {
+                mainPage?.LogTheMessage("MirroMate BackgroundTaskBuilder error in app.xaml.cs : " + e);
+            }
         }
 
         /// <summary>
